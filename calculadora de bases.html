@@ -58,7 +58,7 @@
 
     // Função que realiza as conversões
     function calcular() {
-        const valor = document.getElementById('ipt_valor').value; // Obtém o valor do input
+        const valor = ipt_valor.value; // Obtém o valor do input
         if (!valor) { // Se não houver valor inserido
             div_tela.innerHTML = 'Por favor, insira um valor!'; // Mensagem de erro
             return; // Interrompe a função
@@ -67,10 +67,10 @@
         let resultado = ''; // Variável para armazenar os resultados
 
         // Verifica quais checkboxes estão selecionados
-        const base_decimal = document.getElementById('ipt_decimal').checked;
-        const base_binario = document.getElementById('ipt_binario').checked;
-        const base_hexadecimal = document.getElementById('ipt_hexadecimal').checked;
-        const base_octal = document.getElementById('ipt_octal').checked;
+        const base_decimal = ipt_decimal.checked;
+        const base_binario = ipt_binario.checked;
+        const base_hexadecimal = ipt_hexadecimal.checked;
+        const base_octal = ipt_octal.checked;
 
         // Conversão de Decimal
         if (base_decimal) {
