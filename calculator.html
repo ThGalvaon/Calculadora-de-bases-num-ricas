@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Bases</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="bg-image">
+        <div class="container">
+            <h1>With See to Have</h1>
+            <input type="text" id="ipt_valor" placeholder="Insira o número" onkeydown="entradaEnter(event)"><br><br>
+            
+            <div class="checkbox">
+                <input type="checkbox" id="ipt_decimal" class="bt-checkbox" value="Decimal" onclick="checkboxUnico(this)">
+                <label for="ipt_decimal">Decimal</label>
+                
+                <input type="checkbox" id="ipt_binario" class="bt-checkbox" value="Binario" onclick="checkboxUnico(this)">
+                <label for="ipt_binario">Binário</label>
+                
+                <input type="checkbox" id="ipt_hexadecimal" class="bt-checkbox" value="Hexadecimal" onclick="checkboxUnico(this)">
+                <label for="ipt_hexadecimal">Hexadecimal</label>
+                
+                <input type="checkbox" id="ipt_octal" class="bt-checkbox" value="Octal" onclick="checkboxUnico(this)">
+                <label for="ipt_octal">Octal</label>
+            </div>
+
+            <button onclick="calcular()">Converter</button><br><br>
+            
+            <div id="div_tela"></div>
+        </div>
+    </div>
+</body>
+</html>
+
+    <script>
+        function entradaEnter(event) {
+            if (event.key == 'Enter') {
+                event.preventDefault();
+                calcular();
+            }
+        }
+
+        function checkboxUnico(checkbox) {
+            const checkboxes = document.querySelectorAll('.bt-checkbox');
+            checkboxes.forEach(box => {
+                if (box !== checkbox) {
+                    box.checked = false;
+                }
+            });
+        }
+
+        function calcular() {
+            const valor = document.getElementById('ipt_valor').value;
+            if (!valor) {
+                div_tela.innerHTML = 'Por favor, insira um valor!';
+                return;
+            }
+
+            let resultado = '';
+
+            const base_decimal = document.getElementById('ipt_decimal').checked;
+            const base_binario = document.getElementById('ipt_binario').checked;
+            const base_hexadecimal = document.getElementById('ipt_hexadecimal').checked;
+            const base_octal = document.getElementById('ipt_octal').checked;
+
+            if (base_decimal) {
+                const decimal = parseInt(valor, 10);
+                if (isNaN(decimal)) {
+                    div_tela.innerHTML = 'Valor inválido para decimal!';
+                    return;
+                }
+                const octal = decimal.toString(8);
+                const hexadecimal = decimal.toString(16).toUpperCase();
+                const binario = decimal.toString(2);
+
+                resultado += `
+                    Decimal para Octal: <b>${octal}</b><br>
+                    Decimal para Hexadecimal: <b>${hexadecimal}</b><br>
+                    Decimal para Binário: <b>${binario}</b>
+                `;
+            }
+
+            if (base_binario) {
+                if (!/^[01]+$/.test(valor)) {
+                    div_tela.innerHTML = 'Valor inválido para binário! Apenas 0 e 1 são permitidos.';
+                    return;
+                }
+                const decimal = parseInt(valor, 2);
+                const octal = decimal.toString(8);
+                const hexadecimal = decimal.toString(16).toUpperCase();
+
+                resultado += `
+                    Binário para Decimal: <b>${decimal}</b><br>
+                    Binário para Octal: <b>${octal}</b><br>
+                    Binário para Hexadecimal: <b>${hexadecimal}</b>
+                `;
+            }
+
+            if (base_hexadecimal) {
+                const decimal = parseInt(valor, 16);
+                if (isNaN(decimal)) {
+                    div_tela.innerHTML = 'Valor inválido para hexadecimal!';
+                    return;
+                }
+                const octal = decimal.toString(8);
+                const binario = decimal.toString(2);
+
+                resultado += `
+                    Hexadecimal para Decimal: <b>${decimal}</b><br>
+                    Hexadecimal para Octal: <b>${octal}</b><br>
+                    Hexadecimal para Binário: <b>${binario}</b>
+                `;
+            }
+
+            if (base_octal) {
+                const decimal = parseInt(valor, 8);
+                if (isNaN(decimal)) {
+                    div_tela.innerHTML = 'Valor inválido para octal!';
+                    return;
+                }
+                const binario = decimal.toString(2);
+                const hexadecimal = decimal.toString(16).toUpperCase();
+
+                resultado += `
+                    Octal para Decimal: <b>${decimal}</b><br>
+                    Octal para Binário: <b>${binario}</b><br>
+                    Octal para Hexadecimal: <b>${hexadecimal}</b>
+                `;
+            }
+
+           div_tela.innerHTML = resultado;
+        }
+    </script>
