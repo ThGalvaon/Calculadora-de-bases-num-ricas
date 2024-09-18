@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Bases</title>
+    <link rel="stylesheet" href="style.css"> <!-- Link para o arquivo CSS -->
+</head>
+
+<body>
+    <div class="bg-image"> <!-- Div para a imagem de fundo -->
+        <div class="container"> <!-- Div para conter os elementos -->
+            <h1>With See to Have</h1> <!-- Título da página -->
+            <input type="text" id="ipt_valor" placeholder="Insira o número" onkeydown="entradaEnter(event)"> <!-- Campo de entrada para o número -->
+            <br><br>
+            
+            <div class="checkbox"> <!-- Div para os checkboxes -->
+                <input type="checkbox" id="ipt_decimal" class="bt-checkbox" value="Decimal" onclick="checkboxUnico(this)"> <!-- Checkbox para Decimal -->
+                <label for="ipt_decimal">Decimal</label>
+                
+                <input type="checkbox" id="ipt_binario" class="bt-checkbox" value="Binario" onclick="checkboxUnico(this)"> <!-- Checkbox para Binário -->
+                <label for="ipt_binario">Binário</label>
+                
+                <input type="checkbox" id="ipt_hexadecimal" class="bt-checkbox" value="Hexadecimal" onclick="checkboxUnico(this)"> <!-- Checkbox para Hexadecimal -->
+                <label for="ipt_hexadecimal">Hexadecimal</label>
+                
+                <input type="checkbox" id="ipt_octal" class="bt-checkbox" value="Octal" onclick="checkboxUnico(this)"> <!-- Checkbox para Octal -->
+                <label for="ipt_octal">Octal</label>
+            </div>
+
+            <button onclick="calcular()">Converter</button> <!-- Botão para iniciar a conversão -->
+            <br><br>
+            
+            <div id="div_tela"></div> <!-- Div onde os resultados serão exibidos -->
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    // Função que detecta se a tecla pressionada é Enter
+    function entradaEnter(event) {
+        if (event.key == 'Enter') { // Se a tecla pressionada for 'Enter'
+            event.preventDefault(); // Previne o comportamento padrão
+            calcular(); // Chama a função calcular
+        }
+    }
+
+    // Função para garantir que apenas um checkbox esteja selecionado
+    function checkboxUnico(checkbox) {
+        const checkboxes = document.querySelectorAll('.bt-checkbox'); // Seleciona todos os checkboxes
+        checkboxes.forEach(box => {
+            if (box !== checkbox) { // Para cada checkbox que não é o clicado
+                box.checked = false; // Desmarca
+            }
+        });
+    }
+
+    // Função que realiza as conversões
+    function calcular() {
+        const valor = document.getElementById('ipt_valor').value; // Obtém o valor do input
+        if (!valor) { // Se não houver valor inserido
+            div_tela.innerHTML = 'Por favor, insira um valor!'; // Mensagem de erro
+            return; // Interrompe a função
+        }
+
+        let resultado = ''; // Variável para armazenar os resultados
+
+        // Verifica quais checkboxes estão selecionados
+        const base_decimal = document.getElementById('ipt_decimal').checked;
+        const base_binario = document.getElementById('ipt_binario').checked;
+        const base_hexadecimal = document.getElementById('ipt_hexadecimal').checked;
+        const base_octal = document.getElementById('ipt_octal').checked;
+
+        // Conversão de Decimal
+        if (base_decimal) {
+            const decimal = parseInt(valor, 10); // Converte o valor para decimal
+            if (isNaN(decimal)) { // Se o valor não é um número
+                div_tela.innerHTML = 'Valor inválido para decimal!'; // Mensagem de erro
+                return; // Interrompe a função
+            }
+            const octal = decimal.toString(8); // Converte para octal
+            const hexadecimal = decimal.toString(16).toUpperCase(); // Converte para hexadecimal
+            const binario = decimal.toString(2); // Converte para binário
+
+            resultado += ` <!-- Adiciona resultados da conversão -->
+                Decimal para Octal: <b>${octal}</b><br>
+                Decimal para Hexadecimal: <b>${hexadecimal}</b><br>
+                Decimal para Binário: <b>${binario}</b>
+            `;
+        }
+
+        // Conversão de Binário
+        if (base_binario) {
+            if (!/^[01]+$/.test(valor)) { // Verifica se o valor é um número binário válido
+                div_tela.innerHTML = 'Valor inválido para binário! Apenas 0 e 1 são permitidos.'; // Mensagem de erro
+                return; // Interrompe a função
+            }
+            const decimal = parseInt(valor, 2); // Converte para decimal
+            const octal = decimal.toString(8); // Converte para octal
+            const hexadecimal = decimal.toString(16).toUpperCase(); // Converte para hexadecimal
+
+            resultado += ` <!-- Adiciona resultados da conversão -->
+                Binário para Decimal: <b>${decimal}</b><br>
+                Binário para Octal: <b>${octal}</b><br>
+                Binário para Hexadecimal: <b>${hexadecimal}</b>
+            `;
+        }
+
+        // Conversão de Hexadecimal
+        if (base_hexadecimal) {
+            const decimal = parseInt(valor, 16); // Converte para decimal
+            if (isNaN(decimal)) { // Se o valor não é um número
+                div_tela.innerHTML = 'Valor inválido para hexadecimal!'; // Mensagem de erro
+                return; // Interrompe a função
+            }
+            const octal = decimal.toString(8); // Converte para octal
+            const binario = decimal.toString(2); // Converte para binário
+
+            resultado += ` <!-- Adiciona resultados da conversão -->
+                Hexadecimal para Decimal: <b>${decimal}</b><br>
+                Hexadecimal para Octal: <b>${octal}</b><br>
+                Hexadecimal para Binário: <b>${binario}</b>
+            `;
+        }
+
+        // Conversão de Octal
+        if (base_octal) {
+            const decimal = parseInt(valor, 8); // Converte para decimal
+            if (isNaN(decimal)) { // Se o valor não é um número
+                div_tela.innerHTML = 'Valor inválido para octal!'; // Mensagem de erro
+                return; // Interrompe a função
+            }
+            const binario = decimal.toString(2); // Converte para binário
+            const hexadecimal = decimal.toString(16).toUpperCase(); // Converte para hexadecimal
+
+            resultado += ` <!-- Adiciona resultados da conversão -->
+                Octal para Decimal: <b>${decimal}</b><br>
+                Octal para Binário: <b>${binario}</b><br>
+                Octal para Hexadecimal: <b>${hexadecimal}</b>
+            `;
+        }
+
+        div_tela.innerHTML = resultado; // Exibe os resultados na div
+    }
+</script>
