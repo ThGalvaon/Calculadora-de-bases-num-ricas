@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Th's Machine</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <center>
+        <h1>Th's Machine</h1>
+
+        <h2>Conversor de Bases</h2>
+        <h3>Valor</h3>
+        <input type="text" id="ipt_valor" placeholder="Insira o número" onkeydown="entradaEnter(event)">
+
+        <h3>Converter para:</h3>
+        <div class="checkbox">
+            <input type="checkbox" id="ipt_decimal" class="bt-checkbox" value="Decimal" onclick="checkboxUnico(this)">
+            <label for="ipt_decimal">Decimal</label>
+
+            <input type="checkbox" id="ipt_binario" class="bt-checkbox" value="Binário" onclick="checkboxUnico(this)">
+            <label for="ipt_binario">Binário</label>
+
+            <input type="checkbox" id="ipt_hexadecimal" class="bt-checkbox" value="Hexadecimal" onclick="checkboxUnico(this)">
+            <label for="ipt_hexadecimal">Hexadecimal</label>
+
+            <input type="checkbox" id="ipt_octal" class="bt-checkbox" value="Octal" onclick="checkboxUnico(this)">
+            <label for="ipt_octal">Octal</label>
+        </div>
+
+        <button onclick="calcularConversao()">Converter</button>
+        <div class="resultado" id="div_tela"></div>
+
+        <h2>Calculadora de Bases</h2>
+        <h3>Digite o primeiro número:</h3>
+        <input type="text" id="num1" placeholder="Número">
+
+        <h3>Digite o segundo número:</h3>
+        <input type="text" id="num2" placeholder="Número">
+
+        <h3>Selecione a base:</h3>
+        <select id="base">
+            <option value="10">Decimal</option>
+            <option value="2">Binário</option>
+            <option value="8">Octal</option>
+            <option value="16">Hexadecimal</option>
+        </select>
+
+        <button onclick="calcular('+')">Somar</button>
+        <button onclick="calcular('-')">Subtrair</button>
+
+        <h3>Resultado:</h3>
+        <div class="resultado" id="resultado"></div>
+    </center>
+
+    <script>
+        function entradaEnter(event) {
+            if (event.key == 'Enter') {
+                event.preventDefault();
+                calcularConversao();
+            }
+        }
+
+        function checkboxUnico(checkbox) {
+            const checkboxes = document.querySelectorAll('.bt-checkbox');
+            checkboxes.forEach(box => {
+                if (box !== checkbox) {
+                    box.checked = false;
+                }
+            });
+        }
+
+        function calcularConversao() {
+            const valor = ipt_valor.value;
+            if (!valor) {
+                div_tela.innerHTML = 'Por favor, insira um valor!';
+                return;
+            }
+
+            let resultado = '';
+            const base_decimal = ipt_decimal.checked;
+            const base_binario = ipt_binario.checked;
+            const base_hexadecimal = ipt_hexadecimal.checked;
+            const base_octal = ipt_octal.checked;
+
+            if (base_decimal) {
+                const decimal = parseInt(valor, 10);
+                resultado += converterDecimal(decimal);
+            }
+            if (base_binario) {
+                if (!/^[01]+$/.test(valor)) {
+                    div_tela.innerHTML = 'Valor inválido para binário!';
+                    return;
+                }
+                const decimal = parseInt(valor, 2);
+                resultado += converterDecimal(decimal);
+            }
+            if (base_hexadecimal) {
+                const decimal = parseInt(valor, 16);
+                resultado += converterDecimal(decimal);
+            }
+            if (base_octal) {
+                const decimal = parseInt(valor, 8);
+                resultado += converterDecimal(decimal);
+            }
+
+            div_tela.innerHTML = resultado;
+        }
+
+        function converterDecimal(decimal) {
+            const octal = decimal.toString(8);
+            const hexadecimal = decimal.toString(16).toUpperCase();
+            const binario = decimal.toString(2);
+            return `
+                Decimal para Octal: <b>${octal}</b><br>
+                Decimal para Hexadecimal: <b>${hexadecimal}</b><br>
+                Decimal para Binário: <b>${binario}</b><br>
+            `;
+        }
+
+        function calcular(calculo) {
+            const num1 = document.getElementById('num1').value;
+            const base = parseInt(document.getElementById('base').value);
+            const num2 = document.getElementById('num2').value;
+
+            if (!num1 || !num2) {
+                document.getElementById('resultado').innerHTML = 'Por favor, insira ambos os números!';
+                return;
+            }
+
+            const decimal1 = parseInt(num1, base);
+            const decimal2 = parseInt(num2, base);
+            let resultado;
+
+            if (calculo === '+') {
+                resultado = decimal1 + decimal2;
+            } else {
+                resultado = decimal1 - decimal2;
+            }
+
+            let resultadoBase;
+            if (base === 2) {
+                resultadoBase = resultado.toString(2);
+            } else if (base === 8) {
+                resultadoBase = resultado.toString(8);
+            } else if (base === 16) {
+                resultadoBase = resultado.toString(16).toUpperCase();
+            } else {
+                resultadoBase = resultado.toString(10);
+            }
+
+            document.getElementById('resultado').innerHTML = `Resultado em ${base === 10 ? 'Decimal' : base === 2 ? 'Binário' : base === 8 ? 'Octal' : 'Hexadecimal'}: <b>${resultadoBase}</b>`;
+        }
+    </script>
+</body>
+</html>
